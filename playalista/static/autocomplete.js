@@ -10,7 +10,8 @@ app.directive('autocomplete', function(){
         scope: {
             searchParam: '=ngModel',
             suggestions: '=data',
-            onType: '=onType'
+            onType: '=onType',
+            onSelection: "=onSelection"
         },
         controller: function($scope, $element, $attrs){
 
@@ -44,6 +45,10 @@ app.directive('autocomplete', function(){
 
             // starts autocompleting on typing in something
             $scope.$watch('searchParam', function(){
+                if (!$scope.searchParam) {
+                    $scope.suggestions = [];
+                }
+
                 if(watching && $scope.searchParam) {
                     $scope.completing = true;
                     $scope.searchFilter = $scope.searchParam;
@@ -51,8 +56,9 @@ app.directive('autocomplete', function(){
                 }
 
                 // function thats passed to on-type attribute gets executed
-                if($scope.onType)
+                if($scope.onType) {
                     $scope.onType($scope.searchParam);
+                }
             });
 
             // for hovering over suggestions
@@ -88,6 +94,11 @@ app.directive('autocomplete', function(){
                 setTimeout(function(){watching = true;},1000);
                 $scope.setIndex(-1);
 
+                console.log("selecting. suggestion: " + suggestion);
+                console.log("searchParam: " + $scope.searchParam);
+                if($scope.searchParam && suggestion && $scope.onSelection) {
+                    $scope.onSelection(suggestion);
+                }
             }
 
 
@@ -112,14 +123,14 @@ app.directive('autocomplete', function(){
                 }
             }
 
-            if(attrs["clickActivation"]=="true"){
-                element[0].onclick = function(e){
-                    if(!scope.searchParam){
-                        scope.completing = true;
-                        scope.$apply();
-                    }
-                };
-            }
+            // if(attrs["clickActivation"]=="true"){
+            //     element[0].onclick = function(e){
+            //         if(!scope.searchParam){
+            //             scope.completing = true;
+            //             scope.$apply();
+            //         }
+            //     };
+            // }
 
             var key = {left: 37, up: 38, right: 39, down: 40 , enter: 13, esc: 27};
 
@@ -212,7 +223,7 @@ app.directive('autocomplete', function(){
                     default:
                         return;
                 }
-
+attrs
                 if(scope.getIndex()!==-1 || keycode == key.enter)
                     e.preventDefault();
             });
@@ -220,15 +231,15 @@ app.directive('autocomplete', function(){
         template: '<div class="autocomplete {{attrs.class}}" id="{{attrs.id}}">'+
                                 '<input type="text" ng-model="searchParam" placeholder="{{attrs.placeholder}}"/>' +
                                 '<ul ng-show="completing">' +
-                                    '<li suggestion ng-repeat="suggestion in suggestions track by $index | filter:searchFilter | orderBy:\'toString()\'" '+
+                                    '<li suggestion ng-repeat="suggestion in suggestions track by $index" '+
                                     'index="{{$index}}" val="{{suggestion}}" ng-class="{active: '+
-                                    '($index == selectedIndex)}" ng-click="select(suggestion)" '+
+                                    '($index == selectedIndex)}" ng-click="select(suggestion, getVideo)" '+
                                     'ng-bind-html="suggestion | highlight:searchParam">'+
                                         '{{suggestion}}' +
                                     '</li>'+
                                 '</ul>'+
                             '</div>'
-        // templateUrl: 'script/ac_template.html'
+        // templateUrl: 'static/autocomplete.html'
     }
 });
 

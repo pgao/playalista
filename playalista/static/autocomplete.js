@@ -49,6 +49,10 @@ app.directive('autocomplete', function(){
                     $scope.suggestions = [];
                 }
 
+                if (!$scope.suggestions) {
+                    $scope.completing = false;
+                }
+
                 if(watching && $scope.searchParam) {
                     $scope.completing = true;
                     $scope.searchFilter = $scope.searchParam;

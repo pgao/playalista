@@ -43,13 +43,3 @@ def get_song(search_term):
 
     response = query_echonest('song', 'search', parameters)
     return response['songs'][0] if response and response['songs'] else None
-
-# def get_video(search_term):
-#     parameters = {
-#         'combined': search_term,
-#     }
-
-#     response = query_echonest('video', 'search', parameters)
-#     return response['songs'][0] if response and response['songs'] else None
-
-print get_song('11h30')

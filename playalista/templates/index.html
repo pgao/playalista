@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" ng-app="playalista">
+<head>
+    <meta charset="utf-8">
+    <title>PLAYALISTA</title>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+    <script src="http://www.youtube.com/player_api"></script>
+
+    <script src="static/controllers.js"></script>
+    <script src="static/autocomplete.js"></script>
+
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/autocomplete.css">
+</head>
+<body ng-controller="musicCtrl">
+    <autocomplete ng-model="query" attr-placeholder="Type to search for a song." click-activation="true" data="songs" on-type="getSong"></autocomplete>
+    <button ng-click="getVideo(query)">Get Song</button>
+
+    <div youtube code="code"></div>
+
+</body>
+</html>

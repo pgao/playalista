@@ -4,6 +4,12 @@ var ECHONEST_API_URL = 'http://developer.echonest.com/api/v4';
 var YOUTUBE_API_KEY = 'AIzaSyCiERdaxIuw6WOxFFB1joOu1XBEuuCO2dg';
 var YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/search'
 
+var DEFAULT_SONGS = [
+    'Epistrophy - Thelonious Monk',
+    'Blitzkrieg Bop - The Ramones',
+    'Derezzed (Remixed By The Glitch Mob) - Daft Punk'
+]
+
 var playalista = angular.module('playalista', ['autocomplete']);
 
 playalista.controller('musicCtrl', function($scope, $http) {
@@ -65,7 +71,7 @@ playalista.controller('musicCtrl', function($scope, $http) {
 
         $scope.getVideo = function(searchTerm) {
                 console.log("getVideo. searchTerm:");
-                var requestUrl = YOUTUBE_API_URL + "?part=id&q=" + encodeURIComponent(searchTerm) + '&order=viewCount&key=' + YOUTUBE_API_KEY;
+                var requestUrl = YOUTUBE_API_URL + "?part=id&q=" + encodeURIComponent(searchTerm) + '&order=viewCount&type=video&key=' + YOUTUBE_API_KEY;
                 $http.get(requestUrl).success(function(data, status, headers, config) {
                         console.log(data);
                         $scope.code = data.items[0].id.videoId;
@@ -74,7 +80,9 @@ playalista.controller('musicCtrl', function($scope, $http) {
                 });
         };
 
-        $scope.code = "dZ9El7k4mNo";
+        // $scope.code = "dZ9El7k4mNo";
+
+        $scope.code = $scope.getVideo(DEFAULT_SONGS[Math.floor(Math.random() * DEFAULT_SONGS.length)]);
 
         $scope.songs = [];
 });

@@ -8,11 +8,14 @@
 .autocomplete input{
     font-size: 1.2em;
     width: 100%;
-    padding:0.4em;
+    padding: 0.4em;
 }
 
 .autocomplete ul{
     position: absolute;
+    margin-top: 0px;
+    padding: 0;
+    list-style: none;
     left: 0;
     width: 100%;
     border-left: 1px solid #888;
@@ -23,9 +26,9 @@
 
 .autocomplete li{
     text-align: left;
-    list-style:none;
+    list-style: none;
     width: 100%;
-    padding:0.4em;
+    padding: 0.4em;
     background-color: #fff;
 }
 

@@ -53,12 +53,13 @@ playalista.controller('musicCtrl', function($scope, $http) {
 
         if (searchTerm) {
             $scope.queryEchonest('song', 'search', parameters, function(data, status, headers, config) {
-                $scope.songs = [];
+                console.log("data: " + data);
+                $scope.suggestions = [];
                 for (var i = 0; i < data.response.songs.length; i++) {
                     var song = data.response.songs[i];
                     var entry = song.title + ' - ' + song.artist_name;
-                    if ($scope.songs.indexOf(entry) == -1) {
-                        $scope.songs.push(entry);
+                    if ($scope.suggestions.indexOf(entry) == -1) {
+                        $scope.suggestions.push(entry);
                     }
                 }
             });
@@ -94,7 +95,12 @@ playalista.controller('musicCtrl', function($scope, $http) {
     $scope.getNextVideo = function() {
         var requestUrl = YOUTUBE_API_URL + "?part=id&relatedToVideoId=" + $scope.code + '&order=relevance&type=video&key=' + YOUTUBE_API_KEY;
         $http.get(requestUrl).success(function(data, status, headers, config) {
-            $scope.next = data.items[Math.floor(Math.random() * data.items.length)].id.videoId;
+            if (data.items.length < 5) {
+                $scope.next = data.items[Math.floor(Math.random() * data.items.length)].id.videoId;
+            }
+            else {
+                $scope.next = data.items[Math.floor(Math.random() * 5)].id.videoId;
+            }
         }).error(function() {
             console.log("echonest query failed in getVideo");
         });

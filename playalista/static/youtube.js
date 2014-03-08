@@ -35,7 +35,7 @@ app.directive('youtube', ['$window', function($window, $sce) {
                                 'onReady': function() {
                                     player.loadVideoById(newVal);
                                 },
-                                'onStateChange': onStateChange,
+                                'onStateChange': scope.onStateChange,
                             }
                         })
                     }
@@ -44,10 +44,6 @@ app.directive('youtube', ['$window', function($window, $sce) {
                     }
                 }
             });
-
-            function onStateChange(state) {
-                scope.onStateChange(state);
-            }
         }
     };
 }]);

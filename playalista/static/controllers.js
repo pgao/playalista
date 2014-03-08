@@ -10,95 +10,108 @@ var DEFAULT_SONGS = [
     'Derezzed (Remixed By The Glitch Mob) - Daft Punk'
 ]
 
-var playalista = angular.module('playalista', ['autocomplete']);
+var playalista = angular.module('playalista', ['autocomplete', 'youtube']);
 
 playalista.controller('musicCtrl', function($scope, $http) {
-        $scope.queryEchonest = function(requestType, requestFunction, parameters, callback) {
-                if (!requestType in ['artist', 'song']) {
-                        throw exception;
+    $scope.queryEchonest = function(requestType, requestFunction, parameters, callback) {
+        if (!requestType in ['artist', 'song', 'playlist']) {
+            throw exception;
+        }
+        parameters['api_key'] = ECHONEST_API_KEY;
+
+        var requestUrl = [ECHONEST_API_URL, requestType, requestFunction].join('/');
+
+        var paramKeys = Object.keys(parameters);
+        var paramStrings = [];
+
+        for (key in parameters) {
+            if (parameters[key] instanceof Array) {
+                for (var j = 0; j < parameters[key].length; j++) {
+                        paramStrings = paramStrings.concat(encodeURIComponent(key) + '=' + encodeURIComponent(parameters[key][j]));
                 }
-                parameters['api_key'] = ECHONEST_API_KEY;
+            }
+            else {
+                paramStrings = paramStrings.concat(encodeURIComponent(key) + '=' + encodeURIComponent(parameters[key]));
+            }
+        }
 
-                var requestUrl = [ECHONEST_API_URL, requestType, requestFunction].join('/');
+        requestUrl = requestUrl.concat('?', paramStrings.join('&'));
 
-                var paramKeys = Object.keys(parameters);
-                var paramStrings = [];
+        $http.get(requestUrl).success(callback).error(function() {
+            console.log("echonest query failed in queryEchonest");
+        });
+    };
 
-                for (key in parameters) {
-                        if (parameters[key] instanceof Array) {
-                                for (var j = 0; j < parameters[key].length; j++) {
-                                        paramStrings = paramStrings.concat(encodeURIComponent(key) + '=' + encodeURIComponent(parameters[key][j]));
-                                }
-                        }
-                        else {
-                                paramStrings = paramStrings.concat(encodeURIComponent(key) + '=' + encodeURIComponent(parameters[key]));
-                        }
-                }
-
-                requestUrl = requestUrl.concat('?', paramStrings.join('&'));
-
-                console.log(requestUrl);
-
-                $http.get(requestUrl).success(callback).error(function() {
-                    console.log("echonest query failed in queryEchonest");
-                });
+    $scope.getSong = function(searchTerm) {
+        parameters = {
+            'combined': searchTerm,
+            'bucket': ['tracks', 'audio_summary', 'id:7digital-US'],
+            'rank_type': 'relevance',
         };
 
-        $scope.getSong = function(searchTerm) {
-                parameters = {
-                        'combined': searchTerm,
-                        'bucket': ['tracks', 'audio_summary', 'id:7digital-US'],
-                };
+        console.log("query: " + searchTerm);
 
-                console.log("query: " + searchTerm);
-
-                if (searchTerm) {
-                    $scope.queryEchonest('song', 'search', parameters, function(data, status, headers, config) {
-                            console.log(data);
-                            // $scope.getVideo(data.response.songs[0].title + ' ' + data.response.songs[0].artist_name);
-                            $scope.songs = [];
-                            for (var i = 0; i < data.response.songs.length; i++) {
-                                var song = data.response.songs[i];
-                                var entry = song.title + ' - ' + song.artist_name;
-                                if ($scope.songs.indexOf(entry) == -1) {
-                                    $scope.songs.push(entry);
-                                }
-                            }
-                            console.log("scope.songs: " + $scope.songs);
-                    });
-                }
-        };
-
-        $scope.getVideo = function(searchTerm) {
-                console.log("getVideo. searchTerm:");
-                var requestUrl = YOUTUBE_API_URL + "?part=id&q=" + encodeURIComponent(searchTerm) + '&order=viewCount&type=video&key=' + YOUTUBE_API_KEY;
-                $http.get(requestUrl).success(function(data, status, headers, config) {
-                        console.log(data);
-                        $scope.code = data.items[0].id.videoId;
-                }).error(function() {
-                        console.log("echonest query failed in getVideo");
-                });
-        };
-
-        // $scope.code = "dZ9El7k4mNo";
-
-        $scope.code = $scope.getVideo(DEFAULT_SONGS[Math.floor(Math.random() * DEFAULT_SONGS.length)]);
-
-        $scope.songs = [];
-});
-
-playalista.directive('youtube', function($sce) {
-    return {
-        restrict: 'EA',
-        scope: { code:'=' },
-        replace: true,
-        template: '<div style="height:600px;"><iframe style="overflow:hidden;height:100%;width:100%" width="100%" height="100%" src="{{url}}" frameborder="0" allowfullscreen></iframe></div>',
-        link: function (scope) {
-            scope.$watch('code', function (newVal) {
-                if (newVal) {
-                    scope.url = $sce.trustAsResourceUrl("http://www.youtube.com/embed/" + newVal + "?autoplay=1&wmode=transparent");
+        if (searchTerm) {
+            $scope.queryEchonest('song', 'search', parameters, function(data, status, headers, config) {
+                $scope.songs = [];
+                for (var i = 0; i < data.response.songs.length; i++) {
+                    var song = data.response.songs[i];
+                    var entry = song.title + ' - ' + song.artist_name;
+                    if ($scope.songs.indexOf(entry) == -1) {
+                        $scope.songs.push(entry);
+                    }
                 }
             });
         }
     };
+
+    $scope.getRelatedSong = function(songId) {
+        parameters = {
+            'song_id': songId,
+            'format': 'json',
+            'results': '20',
+            'type': 'song-radio',
+        };
+
+        if (searchTerm) {
+            // $scope.queryEchonest('playlist', 'static', parameters, function(data, status, headers, config) {
+            //     debugger;
+            // });
+            console.log('getting related song');
+        }
+    };
+
+    $scope.getVideo = function(searchTerm) {
+        var requestUrl = YOUTUBE_API_URL + "?part=id&q=" + encodeURIComponent(searchTerm) + '&order=relevance&type=video&key=' + YOUTUBE_API_KEY;
+        $http.get(requestUrl).success(function(data, status, headers, config) {
+            $scope.code = data.items[0].id.videoId;
+            $scope.getNextVideo();
+        }).error(function() {
+            console.log("echonest query failed in getVideo");
+        });
+    };
+
+    $scope.getNextVideo = function() {
+        var requestUrl = YOUTUBE_API_URL + "?part=id&relatedToVideoId=" + $scope.code + '&order=relevance&type=video&key=' + YOUTUBE_API_KEY;
+        $http.get(requestUrl).success(function(data, status, headers, config) {
+            $scope.next = data.items[Math.floor(Math.random() * data.items.length)].id.videoId;
+        }).error(function() {
+            console.log("echonest query failed in getVideo");
+        });
+    };
+
+    $scope.onStateChange = function(state) {
+        if (state.data == 0) {
+            $scope.code = $scope.next;
+            $scope.getNextVideo();
+        }
+    };
+
+    $scope.selected = DEFAULT_SONGS[Math.floor(Math.random() * DEFAULT_SONGS.length)];
+
+    $scope.code = $scope.getVideo($scope.selected);
+
+    $scope.next = '';
+
+    $scope.suggestions = [];
 });

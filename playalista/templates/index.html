@@ -5,18 +5,18 @@
     <title>PLAYALISTA</title>
     
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
-    <script src="http://www.youtube.com/player_api"></script>
 
     <script src="static/controllers.js"></script>
     <script src="static/autocomplete.js"></script>
+    <script src="static/youtube.js"></script>
 
     <link rel="stylesheet" href="static/style.css">
     <link rel="stylesheet" href="static/autocomplete.css">
 </head>
 <body ng-controller="musicCtrl">
-    <autocomplete ng-model="query" attr-placeholder="Type to search for a song." click-activation="true" data="songs" on-type="getSong" on-selection="getVideo"></autocomplete>
+    <autocomplete ng-model="query" attr-placeholder="Type to search for a song." click-activation="true" data="suggestions" on-type="getSong" on-selection="getVideo"></autocomplete>
 
-    <div youtube code="code"></div>
+    <div youtube code="code" on-state-change="onStateChange"></div>
 
 </body>
 </html>

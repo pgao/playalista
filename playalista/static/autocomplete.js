@@ -211,8 +211,12 @@ app.directive('autocomplete', function(){
 
                         index = scope.getIndex();
                         // scope.preSelectOff();
-                        if(index !== -1)
+                        if(index !== -1) {
                             scope.select(angular.element(angular.element(this).find('li')[index]).text());
+                        }
+                        else if (scope.searchParam) {
+                            scope.select(scope.searchParam);
+                        }
                         scope.setIndex(-1);     
                         scope.$apply();
 

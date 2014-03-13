@@ -179,33 +179,55 @@ playalista.controller('musicCtrl', function($scope, $http) {
   };
 
   $scope.getSong = function(searchTerm) {
-    parameters = {
-      'combined': searchTerm,
-      'bucket': ['tracks', 'audio_summary', 'id:7digital-US'],
-      'rank_type': 'relevance',
-    };
+    // parameters = {
+    //   'combined': searchTerm,
+    //   'bucket': ['audio_summary'],
+    //   // 'sort': 'artist_familiarity-desc',
+    // };
 
-    console.log("query: " + searchTerm);
+    // console.log("query: " + searchTerm);
+
+    // if (searchTerm) {
+    //   if(time_out_id != 0) {
+    //     clearTimeout(time_out_id);
+    //   }
+    //   time_out_id = setTimeout(function() {
+    //     time_out_id = 0;
+    //     $scope.queryEchonest('song', 'search', parameters, function(data, status, headers, config) {
+    //       console.log(data);
+    //       $scope.suggestions = [];
+    //       for (var i = 0; i < data.response.songs.length; i++) {
+    //         var song = data.response.songs[i];
+    //         var entry = song.title + ' - ' + song.artist_name;
+    //         if ($scope.suggestions.indexOf(entry) == -1) {
+    //           $scope.suggestions.push(entry);
+    //         }
+    //       }
+    //     });
+    //   }, 150);
+
+    // }
+
+    var requestUrl = YOUTUBE_API_URL + "?part=snippet&maxResults=10&q=" + encodeURIComponent(searchTerm) + '&order=relevance&type=video&key=' + YOUTUBE_API_KEY;
 
     if (searchTerm) {
       if(time_out_id != 0) {
         clearTimeout(time_out_id);
       }
       time_out_id = setTimeout(function() {
-        time_out_id = 0;
-        $scope.queryEchonest('song', 'search', parameters, function(data, status, headers, config) {
-          console.log("data: " + data);
+        $http.get(requestUrl).success(function(data, status, headers, config) {
+          console.log(data);
+
           $scope.suggestions = [];
-          for (var i = 0; i < data.response.songs.length; i++) {
-            var song = data.response.songs[i];
-            var entry = song.title + ' - ' + song.artist_name;
-            if ($scope.suggestions.indexOf(entry) == -1) {
-              $scope.suggestions.push(entry);
-            }
+          for (var i = 0; i < data.items.length; i++) {
+            console.log(data.items[i].snippet.title);
+            $scope.suggestions.push(data.items[i].snippet.title);
           }
+          console.log($scope.suggestions);
+        }).error(function() {
+          console.log("echonest query failed in getVideo");
         });
       }, 150);
-
     }
   };
 

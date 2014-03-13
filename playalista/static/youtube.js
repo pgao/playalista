@@ -14,7 +14,7 @@ app.directive('youtube', ['$window', function($window, $sce) {
     restrict: 'EA',
     scope: {
       code: '=',
-      onStateChange: "="
+      onPlayFinish: "="
     },
     replace: true,
     template: '<div style="height:500px;" id="player"></div>',
@@ -47,7 +47,7 @@ app.directive('youtube', ['$window', function($window, $sce) {
 
       function onStateChange(state) {
         if (state.data == 0) {
-          scope.skipVideo();
+          scope.onPlayFinish();
         }
       }
     }

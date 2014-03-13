@@ -142,6 +142,7 @@ var DEFAULT_SONGS = [
   "I can see it in your face",
   "red army choir",
   "move bitch ludacris",
+  "come together beatles",
 ]
 
 var time_out_id = 0;

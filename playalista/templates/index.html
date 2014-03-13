@@ -17,7 +17,7 @@
     <autocomplete ng-model="query" attr-placeholder="Type to search for a song." click-activation="true" data="suggestions" on-type="getSong" on-selection="getVideo"></autocomplete>
 
     <div id="youtubeContainer">
-        <div youtube code="code" on-state-change="onStateChange"></div>
+        <div youtube code="code" on-play-finish="skipVideo"></div>
     </div>
 
     <div class="buttonContainer">

@@ -86,7 +86,7 @@ var DEFAULT_SONGS = [
   "I miss you ayur",
   "Flower dance",
   "Round midnight 7note",
-  "Reflection eternal",
+  "Reflection eternal nujabes",
   "Kronos and ron carter",
   "Magnum Force theme",
   "Black orpheus",
@@ -227,6 +227,7 @@ playalista.controller('musicCtrl', function($scope, $http) {
 
   $scope.getVideo = function(searchTerm) {
     var requestUrl = YOUTUBE_API_URL + "?part=id&q=" + encodeURIComponent(searchTerm) + '&order=relevance&type=video&key=' + YOUTUBE_API_KEY;
+    $scope.selected = searchTerm;
     $http.get(requestUrl).success(function(data, status, headers, config) {
       for (var i = 0; i < data.items.length; i++) {
         if ($scope.history.indexOf(data.items[i].id.videoId) == -1) {
@@ -257,11 +258,14 @@ playalista.controller('musicCtrl', function($scope, $http) {
     });
   };
 
-  $scope.onStateChange = function(state) {
-    if (state.data == 0) {
-      $scope.code = $scope.next;
-      $scope.getNextVideo();
-    }
+  $scope.skipVideo = function() {
+    $scope.code = $scope.next;
+    $scope.getNextVideo();
+  };
+
+  $scope.setRandomVideo = function() {
+    $scope.selected = DEFAULT_SONGS[Math.floor(Math.random() * DEFAULT_SONGS.length)];
+    $scope.code = $scope.getVideo($scope.selected);
   };
 
   $scope.selected = DEFAULT_SONGS[Math.floor(Math.random() * DEFAULT_SONGS.length)];

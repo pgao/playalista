@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>PLAYALISTA</title>
-    
+
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
 
     <script src="static/controllers.js"></script>
@@ -16,7 +16,18 @@
 <body ng-controller="musicCtrl">
     <autocomplete ng-model="query" attr-placeholder="Type to search for a song." click-activation="true" data="suggestions" on-type="getSong" on-selection="getVideo"></autocomplete>
 
-    <div youtube code="code" on-state-change="onStateChange"></div>
+    <div id="youtubeContainer">
+        <div youtube code="code" on-state-change="onStateChange"></div>
+    </div>
+
+    <div class="buttonContainer">
+        <button class="skipButton" ng-click="skipVideo()">
+            Skip Song 
+        </button>
+        <button class="randomButton" ng-click="setRandomVideo()">
+            Get A Random Song
+        </button>
+    </div>
 
 </body>
 </html>

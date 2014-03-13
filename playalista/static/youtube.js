@@ -17,7 +17,7 @@ app.directive('youtube', ['$window', function($window, $sce) {
       onStateChange: "="
     },
     replace: true,
-    template: '<div style="height:600px;" id="player"></div>',
+    template: '<div style="height:500px;" id="player"></div>',
     link: function (scope) {
       var player;
       scope.$watch('code', function (newVal) {
@@ -25,7 +25,7 @@ app.directive('youtube', ['$window', function($window, $sce) {
           if (!player) {
             player = new YT.Player('player', {
               height: '100%',
-              width: '100%',
+              width: '80%',
               videoId: 'M71c1UVf-VE',
               playerVars: {
                 wmode: "transparent",
@@ -46,7 +46,9 @@ app.directive('youtube', ['$window', function($window, $sce) {
       });
 
       function onStateChange(state) {
-        scope.onStateChange(state);
+        if (state.data == 0) {
+          scope.skipVideo();
+        }
       }
     }
   };

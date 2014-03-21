@@ -119,7 +119,7 @@ var DEFAULT_SONGS = [
   "Swisgaar's solo",
   "Feels like we only go backwards",
   "Tycho - A Walk",
-  "Home Stay",
+  "Home Stay ghost in the shell",
   "Smirnoff Tea Party",
   "Farewell Spaceman",
   "Zero 7",
@@ -217,14 +217,11 @@ playalista.controller('musicCtrl', function($scope, $http) {
       }
       time_out_id = setTimeout(function() {
         $http.get(requestUrl).success(function(data, status, headers, config) {
-          console.log(data);
-
           $scope.suggestions = [];
           for (var i = 0; i < data.items.length; i++) {
             console.log(data.items[i].snippet.title);
             $scope.suggestions.push(data.items[i].snippet.title);
           }
-          console.log($scope.suggestions);
         }).error(function() {
           console.log("echonest query failed in getVideo");
         });
@@ -260,8 +257,6 @@ playalista.controller('musicCtrl', function($scope, $http) {
         console.log("duplicate video found");
       }
 
-      console.log($scope.history);
-
       $scope.history.push($scope.code);
       $scope.getNextVideo();
     }).error(function() {
@@ -272,11 +267,9 @@ playalista.controller('musicCtrl', function($scope, $http) {
   $scope.getNextVideo = function() {
     var requestUrl = YOUTUBE_API_URL + "?part=id&relatedToVideoId=" + $scope.code + '&order=relevance&type=video&key=' + YOUTUBE_API_KEY;
     $http.get(requestUrl).success(function(data, status, headers, config) {
-      if (data.items.length < 5) {
+      $scope.next = data.items[Math.floor(Math.random() * data.items.length)].id.videoId;
+      while ($scope.history.indexOf($scope.next) != -1) {
         $scope.next = data.items[Math.floor(Math.random() * data.items.length)].id.videoId;
-      }
-      else {
-        $scope.next = data.items[Math.floor(Math.random() * 5)].id.videoId;
       }
     }).error(function() {
       console.log("echonest query failed in getVideo");

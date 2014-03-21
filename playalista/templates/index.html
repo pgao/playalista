@@ -14,7 +14,11 @@
     <link rel="stylesheet" href="static/autocomplete.css">
 </head>
 <body ng-controller="musicCtrl">
-    <autocomplete ng-model="query" attr-placeholder="Type to search for a song." click-activation="true" data="suggestions" on-type="getSong" on-selection="getVideo"></autocomplete>
+    <div id="title">
+        PLAYALISTA&#9733;
+    </div>
+
+    <autocomplete ng-model="query" attr-placeholder="Search for a song!" click-activation="true" data="suggestions" on-type="getSong" on-selection="getVideo"></autocomplete>
 
     <div id="youtubeContainer">
         <div youtube code="code" on-play-finish="skipVideo"></div>

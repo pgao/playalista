@@ -260,6 +260,8 @@ playalista.controller('musicCtrl', function($scope, $http) {
         console.log("duplicate video found");
       }
 
+      console.log($scope.history);
+
       $scope.history.push($scope.code);
       $scope.getNextVideo();
     }).error(function() {

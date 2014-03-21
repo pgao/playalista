@@ -1,17 +1,22 @@
 /* AUTOCOMPLETE */
 
 .autocomplete{
-    width: 100%;
+    width: 80%;
     position: relative;
+    margin: auto auto;
+    font-color: black;
 }
 
 .autocomplete input{
+    box-sizing: border-box;
     font-size: 1.2em;
     width: 100%;
     padding: 0.4em;
+    border: 0;
 }
 
 .autocomplete ul{
+    line-height: 20px;
     position: absolute;
     margin-top: 0px;
     padding: 0;
@@ -25,6 +30,7 @@
 }
 
 .autocomplete li{
+    box-sizing: border-box;
     text-align: left;
     list-style: none;
     width: 100%;

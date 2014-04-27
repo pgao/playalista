@@ -69,8 +69,9 @@ app.directive('autocomplete', function () {
                 if ($scope.currentTitle) {
                     watching = false;
                     $scope.searchParam = $scope.currentTitle;
-                    $scope.$apply();
-                    watching = true;
+                    setTimeout(function () {
+                        watching = true;
+                    }, 200);
                 }
             })
 

@@ -18,10 +18,10 @@
         PLAYALISTA&#9733;
     </div>
 
-    <autocomplete ng-model="query" attr-placeholder="Search for a song!" click-activation="true" data="suggestions" on-type="getSong" on-selection="getVideo"></autocomplete>
+    <autocomplete ng-model="query" current-title="currentYoutubeTitle" attr-placeholder="Search for a song!" click-activation="true" data="suggestions" on-type="getSong" on-selection="getVideo"></autocomplete>
 
     <div id="youtubeContainer">
-        <div youtube code="code" on-play-finish="skipVideo"></div>
+        <div youtube code="currentYoutubeId" on-play-finish="skipVideo"></div>
     </div>
 
     <div class="buttonContainer">

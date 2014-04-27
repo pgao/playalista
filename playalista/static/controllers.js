@@ -277,7 +277,6 @@ playalista.controller('musicCtrl', function ($scope, $http) {
         var requestUrl = YOUTUBE_API_URL + "?part=snippet&relatedToVideoId=" + $scope.currentYoutubeId + '&order=relevance&type=video&key=' + YOUTUBE_API_KEY;
         $http.get(requestUrl).success(function (data, status, headers, config) {
             $scope.nextYoutubeId = null;
-            console.log(data.items)
             while (!$scope.nextYoutubeId || $scope.history.indexOf($scope.nextYoutubeId) != -1) {
                 var randomIndex = Math.floor(Math.random() * data.items.length);
                 $scope.nextYoutubeId = data.items[randomIndex].id.videoId;

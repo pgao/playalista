@@ -31,7 +31,7 @@ var DEFAULT_SONGS = [
     "life/universe detektivbyran",
     "Stayin Alive bee gees",
     "Institutionalized suicidal tendencies",
-    "Sunset Song",
+    "Sunset Song Hidetake Takayama",
     "fragrance of Dark Coffee",
     "Eyes on fire, Zed's Dead",
     "First Snow - Emancipator",
@@ -150,6 +150,8 @@ var DEFAULT_SONGS = [
     "sweater weather the neighborhood",
     "the a la menthe la caution",
     "alive 2007 daft punk",
+    "bacon pancakes new york remix",
+    "nosaj thing kexp",
 ]
 
 var timeOutId = 0;
